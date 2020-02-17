@@ -6,6 +6,7 @@ from abc import abstractmethod
 import numpy as np
 import tensorflow as tf
 import gc
+import copy
 
 import os
 os.environ["CUDA_VISIBLE_DEVICES"] = "3"
@@ -136,11 +137,11 @@ class InceptionV3_cutted(torch.nn.Module):
 
 class InceptionV3Wrapper(PublicImageModelWrapper):
 
-    def __init__(self, labels_path):
+    def __init__(self, labels_path,v3model):
         image_shape = [299, 299, 3]
         super(InceptionV3Wrapper, self).__init__(image_shape=image_shape,
                                                  labels_path=labels_path)
-        self.model = torchvision.models.inception_v3(pretrained=True, transform_input=True)
+        self.model = copy.deepcopy(v3model)
         self.model_name = 'InceptionV3_public'
 
     def forward(self, x):
